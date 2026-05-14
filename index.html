@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Referensi Perintah & Fungsi SQL</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.47.0/tabler-icons.min.css">
+<style>
+  @font-face {
+    font-family: 'Google Sans';
+    font-style: normal;
+    font-weight: 400;
+    src: url('https://fonts.gstatic.com/s/productsans/v5/HYvgU2fE2nRJvZ5JFAumwegdm0LZdjqr5-oayXSOefg.woff2') format('woff2');
+  }
+  @font-face {
+    font-family: 'Google Sans';
+    font-style: normal;
+    font-weight: 500;
+    src: url('https://fonts.gstatic.com/s/productsans/v5/HYvgU2fE2nRJvZ5JFAumwegdm0LZdjqr5-oayXSOefg.woff2') format('woff2');
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    /* Latar Belakang & Permukaan */
+    --bg: #1c1c1a; 
+    --bg-2: #262624; 
+    --bg-3: #000000; 
+
+    /* Teks */
+    --text: #f0efe8; 
+    --text-2: #a8a89e; 
+    --text-3: #6a6a64; 
+
+    /* Garis Tepi */
+    --border: rgba(255,255,255,0.08);
+    --border-2: rgba(255,255,255,0.15);
+
+    /* Aksen & State Warna */
+    --accent: #1a1a18; 
+    --green-bg: #173404; --green-text: #C0DD97; --green-bd: #3B6D11;
+    --amber-bg: #412402; --amber-text: #FAC775; --amber-bd: #854F0B;
+    --coral-bg: #4A1B0C; --coral-text: #F0997B; --coral-bd: #993C1D;
+    --blue-bg: #042C53; --blue-text: #85B7EB; --blue-bd: #185FA5;
+    --red-bg: #501313; --red-text: #F09595;
+
+    /* Lainnya */
+    --radius: 10px; --radius-sm: 6px;
+    --font: 'Google Sans', 'Plus Jakarta Sans', sans-serif;
+    --mono: 'DM Mono', monospace;
+    --shadow: 0 1px 3px rgba(0,0,0,0.3); 
+  }
+
+  body {
+    font-family: var(--font);
+    background: var(--bg-3); 
+    color: var(--text); 
+    font-size: 15px;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  .page-wrap { max-width: 900px; margin: 0 auto; padding: 2rem 1.25rem 4rem; }
+
+  .page-header { margin-bottom: 2rem; display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 1rem; }
+  .header-left { flex: 1; min-width: 300px; }
+  .page-title { font-size: 26px; font-weight: 500; color: var(--text); margin-bottom: 4px; display: flex; align-items: center; gap: 10px; }
+  .page-title i { font-size: 24px; color: var(--blue-text); }
+  .page-sub { font-size: 14px; color: var(--text-2); }
+
+  .controls { background: var(--bg); border: 0.5px solid var(--border); border-radius: var(--radius); padding: 1rem 1.25rem; margin-bottom: 1rem; box-shadow: var(--shadow); }
+
+  .search-wrap { position: relative; margin-bottom: 12px; }
+  .search-wrap i { position: absolute; left: 11px; top: 50%; transform: translateY(-50%); font-size: 16px; color: var(--text-3); pointer-events: none; }
+  .search-wrap input {
+    width: 100%; padding: 9px 12px 9px 36px;
+    background: var(--bg-2); border: 0.5px solid var(--border);
+    border-radius: var(--radius-sm); font-family: var(--font); font-size: 14px;
+    color: var(--text); outline: none; transition: border-color 0.15s;
+  }
+  .search-wrap input:focus { border-color: var(--border-2); background: var(--bg); }
+  .search-wrap input::placeholder { color: var(--text-3); }
+
+  .filter-group { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-bottom: 8px; }
+  .filter-group:last-child { margin-bottom: 0; }
+  .filter-label { font-size: 11px; color: var(--text-3); letter-spacing: 0.04em; text-transform: uppercase; margin-right: 2px; }
+  .fbtn {
+    background: transparent; border: 0.5px solid var(--border);
+    border-radius: 20px; padding: 4px 12px; font-size: 12px; font-family: var(--font);
+    cursor: pointer; color: var(--text-2); transition: all 0.15s; display: flex; align-items: center; gap: 5px;
+  }
+  .fbtn:hover { background: var(--bg-2); color: var(--text); }
+  .fbtn.active { background: var(--bg-2); color: var(--text); border-color: var(--border-2); font-weight: 500; }
+  .fbtn[data-lv="Dasar"].active { background: var(--green-bg); color: var(--green-text); border-color: var(--green-bd); }
+  .fbtn[data-lv="Menengah"].active { background: var(--amber-bg); color: var(--amber-text); border-color: var(--amber-bd); }
+  .fbtn[data-lv="Lanjut"].active { background: var(--coral-bg); color: var(--coral-text); border-color: var(--coral-bd); }
+  .dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+
+  .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 1.25rem; }
+  .stat-card { background: var(--bg); border: 0.5px solid var(--border); border-radius: var(--radius-sm); padding: 10px 14px; text-align: center; box-shadow: var(--shadow); }
+  .stat-num { font-size: 24px; font-weight: 500; } 
+  .stat-lbl { font-size: 11px; color: var(--text-2); margin-top: 1px; }
+
+  .section-head { font-size: 11px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-3); margin: 1.5rem 0 8px; display: flex; align-items: center; gap: 6px; }
+  .section-head .dot { width: 8px; height: 8px; }
+
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 8px; align-items: start; }
+
+  .card {
+    background: var(--bg); border: 0.5px solid var(--border); border-radius: var(--radius);
+    padding: 14px 16px; cursor: pointer; transition: border-color 0.15s, box-shadow 0.15s;
+    box-shadow: var(--shadow);
+  }
+  .card:hover { border-color: var(--border-2); }
+  
+  .card.open { 
+    border-color: var(--border-2); 
+    grid-column: 1 / -1; 
+  }
+
+  .card-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
+  .card-name { font-size: 15px; font-weight: 500; font-family: var(--mono); color: var(--text); }
+  .card-meta { font-size: 11px; color: var(--text-3); margin: 3px 0 6px; display: flex; align-items: center; gap: 5px; }
+  .card-desc { font-size: 13px; color: var(--text-2); line-height: 1.5; }
+  .badges { display: flex; gap: 5px; align-items: center; flex-shrink: 0; }
+  .badge { font-size: 11px; padding: 2px 8px; border-radius: 12px; font-weight: 500; white-space: nowrap; }
+  .badge-hot { background: var(--red-bg); color: var(--red-text); }
+  .badge-d { background: var(--green-bg); color: var(--green-text); }
+  .badge-m { background: var(--amber-bg); color: var(--amber-text); }
+  .badge-l { background: var(--coral-bg); color: var(--coral-text); }
+  .chev { font-size: 14px; color: var(--text-3); transition: transform 0.2s; flex-shrink: 0; margin-top: 2px; }
+  .card.open .chev { transform: rotate(180deg); }
+
+  .detail { display: none; margin-top: 12px; border-top: 0.5px solid var(--border); padding-top: 12px; }
+  .card.open .detail { display: block; }
+
+  .detail-label { font-size: 10px; letter-spacing: 0.05em; text-transform: uppercase; color: var(--text-3); margin-bottom: 4px; }
+  .syntax-box {
+    background: var(--bg-2); border-radius: var(--radius-sm);
+    padding: 8px 10px; font-family: var(--mono); font-size: 12px;
+    color: var(--text); margin-bottom: 12px; word-break: break-all;
+  }
+  
+  /* --- GAYA BARU UNTUK KODE & TABEL HASIL --- */
+  .example-row { margin-bottom: 12px; }
+  .ex-code { 
+    font-family: var(--mono); font-size: 13px; background: var(--blue-bg); color: var(--blue-text); 
+    padding: 10px 14px; border-radius: var(--radius-sm); width: 100%; word-break: break-word; line-height: 1.5;
+  }
+  
+  .ex-res-box {
+    background: var(--bg-2); border: 1px solid var(--border); border-radius: var(--radius-sm); overflow-x: auto; margin-bottom: 10px;
+  }
+  .result-table {
+    width: 100%; border-collapse: collapse; font-family: var(--font); font-size: 13px; color: var(--text); white-space: nowrap;
+  }
+  .result-table th, .result-table td {
+    padding: 8px 14px; border-bottom: 1px solid var(--border); text-align: left;
+  }
+  .result-table tr:last-child td { border-bottom: none; }
+  .result-table th {
+    background: rgba(255,255,255,0.03); font-family: var(--mono); font-weight: 500; color: var(--blue-text); font-size: 12px;
+  }
+  .result-table em { color: var(--text-3); font-style: italic; }
+  
+  .sys-msg {
+    padding: 12px 14px; font-family: var(--mono); font-size: 13px; color: var(--green-text); line-height: 1.5;
+  }
+  .sys-msg i { margin-right: 6px; font-size: 15px; }
+
+  .tip-box {
+    margin-top: 12px; background: var(--bg-2); border-radius: var(--radius-sm);
+    padding: 10px 14px; font-size: 13px; color: var(--text-2); line-height: 1.5;
+    display: flex; gap: 8px; align-items: flex-start; border-left: 3px solid var(--amber-bd);
+  }
+  .tip-box i { flex-shrink: 0; font-size: 16px; margin-top: 1px; color: var(--amber-text); }
+
+  .empty { text-align: center; padding: 3rem; color: var(--text-3); font-size: 14px; }
+  .empty i { font-size: 32px; display: block; margin-bottom: 8px; }
+  .footer { text-align: center; margin-top: 3rem; font-size: 12px; color: var(--text-3); }
+</style>
+</head>
+<body>
+<div class="page-wrap">
+
+  <div class="page-header">
+    <div class="header-left">
+      <div class="page-title"><i class="ti ti-database"></i> Referensi Perintah & Fungsi SQL</div>
+      <div class="page-sub">Gunakan koma (,) di kolom pencarian untuk multi-pencarian · Contoh berbasis data Coffee Shop</div>
+    </div>
+  </div>
+
+  <div class="controls">
+    <div class="search-wrap">
+      <i class="ti ti-search"></i>
+      <input type="text" id="searchInput" placeholder="Contoh: insert, update, order by">
+    </div>
+    <div class="filter-group" id="catFilters"></div>
+    <div class="filter-group">
+      <span class="filter-label">Level:</span>
+      <div id="lvlFilters" style="display:flex;gap:6px;flex-wrap:wrap"></div>
+    </div>
+  </div>
+
+  <div class="stats-row" id="statsRow"></div>
+  <div id="content"></div>
+
+  <div class="footer">Klik kartu untuk expand · Filter & search tersedia di atas</div>
+</div>
+
+<script>
+const CAT_COLORS = {
+  "Query Data": "#378ADD",             
+  "Modifikasi Data": "#1D9E75",        
+  "Fungsi & Agregasi": "#D4537E",      
+  "Joins": "#7F77DD",                  
+  "Operator Set & Logic": "#D85A30",   
+  "Database & Tabel": "#BA7517"        
+};
+
+// Data contoh telah disesuaikan 100% dengan file stores.csv, suppliers.csv, products.csv, dan Coffee Shop Sales.csv
+const commands = [
+  // 1. Kategori: Query Data
+  {name:"SELECT", cat:"Query Data", level:"Dasar", hot:true, desc:"Mengambil atau menampilkan data dari satu atau lebih tabel.", syntax:"SELECT kolom1, kolom2 FROM nama_tabel;", example:"SELECT product_category, product_detail FROM products;", result:`<table class="result-table"><tr><th>product_category</th><th>product_detail</th></tr><tr><td>Coffee</td><td>Ethiopia Rg</td></tr><tr><td>Tea</td><td>Earl Grey Rg</td></tr><tr><td>Drinking Chocolate</td><td>Dark chocolate Lg</td></tr><tr><td>Bakery</td><td>Croissant</td></tr></table>`},
+  {name:"SELECT DISTINCT", cat:"Query Data", level:"Dasar", hot:false, desc:"Menghapus baris duplikat dan hanya menampilkan nilai unik.", syntax:"SELECT DISTINCT kolom FROM tabel;", example:"SELECT DISTINCT store_location FROM stores;", result:`<table class="result-table"><tr><th>store_location</th></tr><tr><td>Astoria</td></tr><tr><td>Lower Manhattan</td></tr><tr><td>Hell's Kitchen</td></tr><tr><td>Brooklyn</td></tr></table>`},
+  {name:"WHERE", cat:"Query Data", level:"Dasar", hot:true, desc:"Menyaring rekaman berdasarkan kondisi tertentu.", syntax:"SELECT kolom FROM tabel WHERE kondisi;", example:"SELECT * FROM products WHERE current_unit_price > 3.00;", result:`<table class="result-table"><tr><th>product_id</th><th>product_category</th><th>product_detail</th><th>current_unit_price</th></tr><tr><td>57</td><td>Tea</td><td>Spicy Eye Opener Chai Lg</td><td>3.10</td></tr><tr><td>59</td><td>Drinking Chocolate</td><td>Dark chocolate Lg</td><td>4.50</td></tr><tr><td>75</td><td>Bakery</td><td>Croissant</td><td>3.50</td></tr></table>`},
+  {name:"ORDER BY", cat:"Query Data", level:"Dasar", hot:false, desc:"Mengurutkan hasil query (Ascending/Descending).", syntax:"SELECT kolom FROM tabel ORDER BY kolom [ASC|DESC];", example:"SELECT store_location, opening_year FROM stores ORDER BY opening_year DESC;", result:`<table class="result-table"><tr><th>store_location</th><th>opening_year</th></tr><tr><td>Brooklyn</td><td>2023</td></tr><tr><td>Lower Manhattan</td><td>2020</td></tr><tr><td>Hell's Kitchen</td><td>2019</td></tr><tr><td>Astoria</td><td>2018</td></tr></table>`},
+  {name:"AND", cat:"Query Data", level:"Dasar", hot:false, desc:"Operator logika yang mengharuskan SEMUA kondisi terpenuhi.", syntax:"WHERE kondisi1 AND kondisi2;", example:"WHERE product_category = 'Tea' AND current_unit_price < 3.00;", result:`<table class="result-table"><tr><th>product_id</th><th>product_detail</th><th>product_category</th><th>current_unit_price</th></tr><tr><td>50</td><td>Earl Grey Rg</td><td>Tea</td><td>2.50</td></tr></table>`},
+  {name:"OR", cat:"Query Data", level:"Dasar", hot:false, desc:"Operator logika yang mengharuskan SALAH SATU kondisi terpenuhi.", syntax:"WHERE kondisi1 OR kondisi2;", example:"WHERE supplier_name = 'Global Coffee Beans Inc.' OR supplier_name = 'Choco Delight Co.';", result:`<table class="result-table"><tr><th>supplier_id</th><th>supplier_name</th><th>contact_email</th></tr><tr><td>1</td><td>Global Coffee Beans Inc.</td><td>contact@globalcoffee.com</td></tr><tr><td>3</td><td>Choco Delight Co.</td><td>info@chocodelight.com</td></tr></table>`},
+  {name:"NOT", cat:"Query Data", level:"Dasar", hot:false, desc:"Operator logika untuk membalikkan kondisi (mengecualikan data).", syntax:"WHERE NOT kondisi;", example:"WHERE NOT product_category = 'Coffee';", result:`<table class="result-table"><tr><th>product_detail</th><th>product_category</th></tr><tr><td>Earl Grey Rg</td><td>Tea</td></tr><tr><td>Dark chocolate Lg</td><td>Drinking Chocolate</td></tr><tr><td>Croissant</td><td>Bakery</td></tr></table>`},
+  {name:"LIMIT", cat:"Query Data", level:"Dasar", hot:false, desc:"Membatasi jumlah baris yang dikembalikan (MySQL / PostgreSQL).", syntax:"SELECT kolom FROM tabel LIMIT jumlah;", example:"SELECT transaction_id, product_detail, transaction_qty FROM sales ORDER BY transaction_qty DESC LIMIT 3;", result:`<table class="result-table"><tr><th>transaction_id</th><th>product_detail</th><th>transaction_qty</th></tr><tr><td>149442</td><td>Croissant</td><td>8</td></tr><tr><td>149441</td><td>Brazilian Lg</td><td>6</td></tr><tr><td>1</td><td>Ethiopia Rg</td><td>2</td></tr></table>`},
+  {name:"SELECT TOP", cat:"Query Data", level:"Dasar", hot:false, desc:"Membatasi jumlah baris yang dikembalikan (SQL Server).", syntax:"SELECT TOP jumlah kolom FROM tabel;", example:"SELECT TOP 3 transaction_date, store_location FROM sales ORDER BY transaction_id DESC;", result:`<table class="result-table"><tr><th>transaction_date</th><th>store_location</th></tr><tr><td>6/30/2023</td><td>Hell's Kitchen</td></tr><tr><td>6/30/2023</td><td>Astoria</td></tr><tr><td>6/30/2023</td><td>Astoria</td></tr></table>`},
+  {name:"LIKE", cat:"Query Data", level:"Menengah", hot:false, desc:"Mencari pola tertentu menggunakan wildcards (% atau _).", syntax:"WHERE kolom LIKE pola;", example:"WHERE product_detail LIKE '%Chai%';", result:`<table class="result-table"><tr><th>product_id</th><th>product_detail</th><th>product_category</th></tr><tr><td>57</td><td>Spicy Eye Opener Chai Lg</td><td>Tea</td></tr></table>`},
+  {name:"IN", cat:"Query Data", level:"Menengah", hot:false, desc:"Memfilter data berdasarkan daftar nilai spesifik.", syntax:"WHERE kolom IN (nilai1, nilai2, ...);", example:"WHERE store_id IN (3, 5, 8);", result:`<table class="result-table"><tr><th>store_id</th><th>store_location</th></tr><tr><td>3</td><td>Astoria</td></tr><tr><td>5</td><td>Lower Manhattan</td></tr><tr><td>8</td><td>Hell's Kitchen</td></tr></table>`},
+  {name:"BETWEEN", cat:"Query Data", level:"Menengah", hot:false, desc:"Memfilter data yang berada dalam suatu rentang nilai.", syntax:"WHERE kolom BETWEEN nilai_awal AND nilai_akhir;", example:"WHERE current_unit_price BETWEEN 2.00 AND 3.00;", result:`<table class="result-table"><tr><th>product_detail</th><th>current_unit_price</th></tr><tr><td>Our Old Time Diner Blend Sm</td><td>2.00</td></tr><tr><td>Ethiopia Rg</td><td>3.00</td></tr><tr><td>Earl Grey Rg</td><td>2.50</td></tr><tr><td>Oatmeal Scone</td><td>3.00</td></tr></table>`},
+  {name:"AS (ALIASES)", cat:"Query Data", level:"Menengah", hot:false, desc:"Memberikan nama alias sementara pada tabel atau kolom.", syntax:"SELECT kolom AS alias_kolom FROM tabel;", example:"SELECT current_unit_price AS harga_terkini FROM products LIMIT 3;", result:`<table class="result-table"><tr><th>harga_terkini</th></tr><tr><td>2.00</td></tr><tr><td>3.00</td></tr><tr><td>2.50</td></tr></table>`},
+  {name:"CASE", cat:"Query Data", level:"Lanjut", hot:false, desc:"Pernyataan kondisional (If-Then-Else) di dalam query.", syntax:"CASE WHEN kondisi THEN hasil ELSE hasil_lain END", example:"SELECT product_detail, CASE WHEN current_unit_price >= 4.00 THEN 'Premium' ELSE 'Reguler' END AS kategori_harga FROM products;", result:`<table class="result-table"><tr><th>product_detail</th><th>kategori_harga</th></tr><tr><td>Ethiopia Rg</td><td>Reguler</td></tr><tr><td>Dark chocolate Lg</td><td>Premium</td></tr><tr><td>Croissant</td><td>Reguler</td></tr></table>`},
+
+  // 2. Kategori: Modifikasi Data
+  {name:"INSERT INTO", cat:"Modifikasi Data", level:"Dasar", hot:true, desc:"Menambahkan baris atau rekaman baru ke dalam tabel.", syntax:"INSERT INTO tabel (kolom) VALUES (nilai);", example:"INSERT INTO suppliers (supplier_id, supplier_name, contact_email) VALUES (6, 'Indo Beans', 'sales@indobeans.com');", result:`<div class="sys-msg"><i class="ti ti-check"></i> Query OK, 1 row affected (0.01 sec)</div>`},
+  {name:"UPDATE", cat:"Modifikasi Data", level:"Dasar", hot:true, desc:"Memodifikasi data yang sudah ada di dalam tabel.", syntax:"UPDATE tabel SET kolom = nilai WHERE kondisi;", example:"UPDATE products SET current_unit_price = 3.50 WHERE product_id = 32;", result:`<div class="sys-msg"><i class="ti ti-check"></i> Query OK, 1 row affected (0.01 sec)<br>Rows matched: 1  Changed: 1  Warnings: 0</div>`, tip:"JANGAN LUPA klausa WHERE jika tidak ingin meng-update semua baris!"},
+  {name:"DELETE", cat:"Modifikasi Data", level:"Dasar", hot:true, desc:"Menghapus baris atau rekaman dari tabel.", syntax:"DELETE FROM tabel WHERE kondisi;", example:"DELETE FROM stores WHERE store_id = 10;", result:`<div class="sys-msg"><i class="ti ti-check"></i> Query OK, 1 row affected (0.02 sec)</div>`},
+  {name:"IS NULL", cat:"Modifikasi Data", level:"Dasar", hot:false, desc:"Menguji apakah suatu nilai dalam kolom itu kosong (NULL).", syntax:"WHERE kolom IS NULL;", example:"SELECT * FROM stores WHERE manager_name IS NULL;", result:`<table class="result-table"><tr><th>store_id</th><th>store_location</th><th>manager_name</th><th>opening_year</th></tr><tr><td>12</td><td>New Jersey</td><td><em>NULL</em></td><td>2024</td></tr></table>`},
+  {name:"IS NOT NULL", cat:"Modifikasi Data", level:"Dasar", hot:false, desc:"Menguji apakah suatu nilai dalam kolom itu TIDAK kosong.", syntax:"WHERE kolom IS NOT NULL;", example:"SELECT * FROM suppliers WHERE contact_email IS NOT NULL LIMIT 2;", result:`<table class="result-table"><tr><th>supplier_id</th><th>supplier_name</th><th>contact_email</th></tr><tr><td>1</td><td>Global Coffee Beans Inc.</td><td>contact@globalcoffee.com</td></tr><tr><td>2</td><td>Tea Time Distributors</td><td>sales@teatime.com</td></tr></table>`},
+  {name:"INSERT INTO SELECT", cat:"Modifikasi Data", level:"Menengah", hot:false, desc:"Menyalin data dari satu tabel langsung disisipkannya ke tabel lain.", syntax:"INSERT INTO tabel2 (kolom) SELECT kolom FROM tabel1;", example:"INSERT INTO premium_products SELECT * FROM products WHERE current_unit_price >= 4.00;", result:`<div class="sys-msg"><i class="ti ti-check"></i> Query OK, 1 row affected (0.04 sec)<br>Records: 1  Duplicates: 0  Warnings: 0</div>`},
+
+  // 3. Kategori: Fungsi & Agregasi
+  {name:"MIN()", cat:"Fungsi & Agregasi", level:"Dasar", hot:false, desc:"Mencari nilai terkecil/minimum di sebuah kolom.", syntax:"SELECT MIN(kolom) FROM tabel;", example:"SELECT MIN(current_unit_price) FROM products;", result:`<table class="result-table"><tr><th>MIN(current_unit_price)</th></tr><tr><td>2.00</td></tr></table>`},
+  {name:"MAX()", cat:"Fungsi & Agregasi", level:"Dasar", hot:false, desc:"Mencari nilai terbesar/maksimum di sebuah kolom.", syntax:"SELECT MAX(kolom) FROM tabel;", example:"SELECT MAX(current_unit_price) FROM products;", result:`<table class="result-table"><tr><th>MAX(current_unit_price)</th></tr><tr><td>4.50</td></tr></table>`},
+  {name:"COUNT()", cat:"Fungsi & Agregasi", level:"Dasar", hot:true, desc:"Menghitung jumlah baris yang cocok dengan kriteria tertentu.", syntax:"SELECT COUNT(kolom) FROM tabel;", example:"SELECT COUNT(transaction_id) FROM sales;", result:`<table class="result-table"><tr><th>COUNT(transaction_id)</th></tr><tr><td>149447</td></tr></table>`},
+  {name:"SUM()", cat:"Fungsi & Agregasi", level:"Dasar", hot:true, desc:"Menghitung total penjumlahan matematis dari sebuah kolom numerik.", syntax:"SELECT SUM(kolom) FROM tabel;", example:"SELECT SUM(transaction_qty) FROM sales WHERE store_id = 5;", result:`<table class="result-table"><tr><th>SUM(transaction_qty)</th></tr><tr><td>48900</td></tr></table>`},
+  {name:"AVG()", cat:"Fungsi & Agregasi", level:"Dasar", hot:false, desc:"Menghitung nilai rata-rata matematis dari sebuah kolom numerik.", syntax:"SELECT AVG(kolom) FROM tabel;", example:"SELECT AVG(current_unit_price) FROM products;", result:`<table class="result-table"><tr><th>AVG(current_unit_price)</th></tr><tr><td>3.08</td></tr></table>`},
+  {name:"GROUP BY", cat:"Fungsi & Agregasi", level:"Menengah", hot:true, desc:"Mengelompokkan baris yang memiliki nilai yang sama ke dalam rekaman ringkasan.", syntax:"SELECT kolom, COUNT(*) FROM tabel GROUP BY kolom;", example:"SELECT store_location, SUM(transaction_qty) FROM sales GROUP BY store_location;", result:`<table class="result-table"><tr><th>store_location</th><th>SUM(transaction_qty)</th></tr><tr><td>Astoria</td><td>50231</td></tr><tr><td>Lower Manhattan</td><td>48900</td></tr><tr><td>Hell's Kitchen</td><td>50316</td></tr></table>`},
+  {name:"HAVING", cat:"Fungsi & Agregasi", level:"Menengah", hot:false, desc:"Memfilter hasil dari fungsi agregasi (sebagai ganti WHERE yang tidak bisa pakai agregasi).", syntax:"GROUP BY kolom HAVING kondisi_agregasi;", example:"SELECT supplier_id, COUNT(*) FROM products GROUP BY supplier_id HAVING COUNT(*) > 1;", result:`<table class="result-table"><tr><th>supplier_id</th><th>COUNT(*)</th></tr><tr><td>1</td><td>2</td></tr><tr><td>2</td><td>2</td></tr><tr><td>4</td><td>2</td></tr></table>`},
+  {name:"CONCAT()", cat:"Fungsi & Agregasi", level:"Menengah", hot:false, desc:"Menggabungkan dua atau lebih string teks.", syntax:"SELECT CONCAT(teks1, teks2) FROM tabel;", example:"SELECT CONCAT(manager_name, ' - ', store_location) FROM stores LIMIT 2;", result:`<table class="result-table"><tr><th>CONCAT(manager_name, ' - ', store_location)</th></tr><tr><td>Budi Santoso - Astoria</td></tr><tr><td>Siti Aminah - Lower Manhattan</td></tr></table>`},
+  {name:"UPPER()", cat:"Fungsi & Agregasi", level:"Menengah", hot:false, desc:"Mengubah seluruh teks dalam kolom menjadi huruf kapital.", syntax:"SELECT UPPER(kolom) FROM tabel;", example:"SELECT UPPER(store_location) FROM stores LIMIT 2;", result:`<table class="result-table"><tr><th>UPPER(store_location)</th></tr><tr><td>ASTORIA</td></tr><tr><td>LOWER MANHATTAN</td></tr></table>`},
+  {name:"LOWER()", cat:"Fungsi & Agregasi", level:"Menengah", hot:false, desc:"Mengubah seluruh teks dalam kolom menjadi huruf kecil.", syntax:"SELECT LOWER(kolom) FROM tabel;", example:"SELECT LOWER(contact_email) FROM suppliers LIMIT 2;", result:`<table class="result-table"><tr><th>LOWER(contact_email)</th></tr><tr><td>contact@globalcoffee.com</td></tr><tr><td>sales@teatime.com</td></tr></table>`},
+
+  // 4. Kategori: Joins
+  {name:"INNER JOIN", cat:"Joins", level:"Menengah", hot:true, desc:"Menggabungkan tabel dengan HANYA mengambil data yang cocok di kedua tabel.", syntax:"SELECT * FROM t1 INNER JOIN t2 ON t1.id = t2.id;", example:"SELECT p.product_detail, s.supplier_name FROM products p INNER JOIN suppliers s ON p.supplier_id = s.supplier_id LIMIT 3;", result:`<table class="result-table"><tr><th>product_detail</th><th>supplier_name</th></tr><tr><td>Our Old Time Diner Blend Sm</td><td>Global Coffee Beans Inc.</td></tr><tr><td>Ethiopia Rg</td><td>Global Coffee Beans Inc.</td></tr><tr><td>Croissant</td><td>Local Bakery Partners</td></tr></table>`},
+  {name:"LEFT JOIN", cat:"Joins", level:"Menengah", hot:true, desc:"Mengambil SEMUA data tabel kiri, plus data yang cocok dari tabel kanan.", syntax:"SELECT * FROM t1 LEFT JOIN t2 ON t1.id = t2.id;", example:"SELECT s.supplier_name, p.product_detail FROM suppliers s LEFT JOIN products p ON s.supplier_id = p.supplier_id;", result:`<table class="result-table"><tr><th>supplier_name</th><th>product_detail</th></tr><tr><td>Global Coffee Beans Inc.</td><td>Ethiopia Rg</td></tr><tr><td>Tea Time Distributors</td><td>Earl Grey Rg</td></tr><tr><td>Paper & Cups Supplier</td><td><em>NULL</em></td></tr></table>`},
+  {name:"RIGHT JOIN", cat:"Joins", level:"Menengah", hot:false, desc:"Mengambil SEMUA data tabel kanan, plus data yang cocok dari tabel kiri.", syntax:"SELECT * FROM t1 RIGHT JOIN t2 ON t1.id = t2.id;", example:"SELECT p.product_detail, s.supplier_name FROM suppliers s RIGHT JOIN products p ON s.supplier_id = p.supplier_id LIMIT 2;", result:`<table class="result-table"><tr><th>product_detail</th><th>supplier_name</th></tr><tr><td>Ethiopia Rg</td><td>Global Coffee Beans Inc.</td></tr><tr><td>Earl Grey Rg</td><td>Tea Time Distributors</td></tr></table>`},
+  {name:"FULL JOIN", cat:"Joins", level:"Menengah", hot:false, desc:"Mengambil SEMUA data dari kedua sisi, ada kecocokan atau tidak.", syntax:"SELECT * FROM t1 FULL OUTER JOIN t2 ON t1.id = t2.id;", example:"SELECT st.store_location, sa.transaction_id FROM stores st FULL OUTER JOIN sales sa ON st.store_id = sa.store_id LIMIT 2;", result:`<table class="result-table"><tr><th>store_location</th><th>transaction_id</th></tr><tr><td>Astoria</td><td>149443</td></tr><tr><td>Lower Manhattan</td><td>1</td></tr></table>`},
+  {name:"Self Join", cat:"Joins", level:"Lanjut", hot:false, desc:"Meng-join-kan sebuah tabel dengan tabel itu sendiri (sering pakai alias).", syntax:"SELECT a.k, b.k FROM tabel a JOIN tabel b ON kondisi;", example:"SELECT a.product_detail AS Produk_1, b.product_detail AS Produk_2 FROM products a JOIN products b ON a.supplier_id = b.supplier_id AND a.product_id != b.product_id;", result:`<table class="result-table"><tr><th>Produk_1</th><th>Produk_2</th></tr><tr><td>Ethiopia Rg</td><td>Our Old Time Diner Blend Sm</td></tr><tr><td>Earl Grey Rg</td><td>Spicy Eye Opener Chai Lg</td></tr><tr><td>Croissant</td><td>Oatmeal Scone</td></tr></table>`},
+
+  // 5. Kategori: Operator Set & Logic
+  {name:"UNION", cat:"Operator Set & Logic", level:"Menengah", hot:false, desc:"Menggabungkan hasil dari dua SELECT dan MENGHAPUS baris duplikat.", syntax:"SELECT kolom FROM t1 UNION SELECT kolom FROM t2;", example:"SELECT store_id FROM stores UNION SELECT store_id FROM sales;", result:`<table class="result-table"><tr><th>store_id</th></tr><tr><td>3</td></tr><tr><td>5</td></tr><tr><td>8</td></tr><tr><td>10</td></tr></table>`},
+  {name:"UNION ALL", cat:"Operator Set & Logic", level:"Menengah", hot:false, desc:"Menggabungkan hasil dari dua SELECT dan MENYIMPAN baris duplikat.", syntax:"SELECT kolom FROM t1 UNION ALL SELECT kolom FROM t2;", example:"SELECT store_id FROM stores UNION ALL SELECT store_id FROM sales LIMIT 5;", result:`<table class="result-table"><tr><th>store_id</th></tr><tr><td>3</td></tr><tr><td>5</td></tr><tr><td>8</td></tr><tr><td>10</td></tr><tr><td>5</td></tr></table>`},
+  {name:"EXISTS", cat:"Operator Set & Logic", level:"Menengah", hot:false, desc:"Menguji apakah sebuah subquery mengembalikan record (TRUE/FALSE).", syntax:"WHERE EXISTS (subquery);", example:"SELECT supplier_name FROM suppliers WHERE EXISTS (SELECT 1 FROM products WHERE products.supplier_id = suppliers.supplier_id);", result:`<table class="result-table"><tr><th>supplier_name</th></tr><tr><td>Global Coffee Beans Inc.</td></tr><tr><td>Tea Time Distributors</td></tr><tr><td>Choco Delight Co.</td></tr><tr><td>Local Bakery Partners</td></tr></table>`},
+  {name:"ANY", cat:"Operator Set & Logic", level:"Lanjut", hot:false, desc:"Membandingkan skalar dengan SALAH SATU nilai dalam subquery.", syntax:"WHERE kolom > ANY (subquery);", example:"SELECT product_detail FROM products WHERE current_unit_price > ANY (SELECT current_unit_price FROM products WHERE product_category = 'Bakery');", result:`<table class="result-table"><tr><th>product_detail</th></tr><tr><td>Spicy Eye Opener Chai Lg</td></tr><tr><td>Dark chocolate Lg</td></tr><tr><td>Croissant</td></tr></table>`},
+  {name:"ALL", cat:"Operator Set & Logic", level:"Lanjut", hot:false, desc:"Membandingkan skalar dengan SEMUA nilai dalam subquery.", syntax:"WHERE kolom > ALL (subquery);", example:"SELECT product_detail FROM products WHERE current_unit_price > ALL (SELECT current_unit_price FROM products WHERE product_category = 'Bakery');", result:`<table class="result-table"><tr><th>product_detail</th></tr><tr><td>Dark chocolate Lg</td></tr></table>`},
+
+  // 6. Kategori: Database & Tabel (DDL)
+  {name:"CREATE TABLE", cat:"Database & Tabel", level:"Menengah", hot:false, desc:"Membuat struktur tabel baru di dalam database.", syntax:"CREATE TABLE nama (id INT, nama VARCHAR(50));", example:"CREATE TABLE promo (promo_id INT PRIMARY KEY, discount DECIMAL);", result:`<div class="sys-msg"><i class="ti ti-check"></i> Query OK, 0 rows affected (0.05 sec)</div>`},
+  {name:"DROP TABLE", cat:"Database & Tabel", level:"Menengah", hot:false, desc:"Menghapus tabel beserta seluruh datanya secara permanen.", syntax:"DROP TABLE nama_tabel;", example:"DROP TABLE promo;", result:`<div class="sys-msg"><i class="ti ti-check"></i> Query OK, 0 rows affected (0.02 sec)</div>`},
+  {name:"ALTER TABLE", cat:"Database & Tabel", level:"Menengah", hot:false, desc:"Menambah, menghapus, atau memodifikasi kolom di tabel yang sudah ada.", syntax:"ALTER TABLE tabel ADD kolom tipe;", example:"ALTER TABLE suppliers ADD phone_number VARCHAR(15);", result:`<div class="sys-msg"><i class="ti ti-check"></i> Query OK, 0 rows affected (0.08 sec)<br>Records: 0  Duplicates: 0  Warnings: 0</div>`},
+  {name:"PRIMARY KEY", cat:"Database & Tabel", level:"Lanjut", hot:false, desc:"Constraint unik yang memastikan data dalam kolom tidak boleh kembar dan tidak boleh NULL.", syntax:"CREATE TABLE t (id INT PRIMARY KEY);", example:"ALTER TABLE stores ADD PRIMARY KEY (store_id);", result:`<div class="sys-msg"><i class="ti ti-check"></i> Query OK, 0 rows affected (0.06 sec)</div>`},
+  {name:"FOREIGN KEY", cat:"Database & Tabel", level:"Lanjut", hot:false, desc:"Constraint yang merujuk pada Primary Key di tabel lain untuk menjalin relasi antar tabel.", syntax:"FOREIGN KEY (kolom) REFERENCES tabel_lain(id);", example:"ALTER TABLE products ADD FOREIGN KEY (supplier_id) REFERENCES suppliers(supplier_id);", result:`<div class="sys-msg"><i class="ti ti-check"></i> Query OK, 0 rows affected (0.07 sec)</div>`},
+  {name:"CREATE INDEX", cat:"Database & Tabel", level:"Lanjut", hot:false, desc:"Membuat struktur index pada kolom untuk mempercepat proses pencarian (Query).", syntax:"CREATE INDEX nama_idx ON tabel (kolom);", example:"CREATE INDEX idx_store_loc ON stores (store_location);", result:`<div class="sys-msg"><i class="ti ti-check"></i> Query OK, 0 rows affected (0.12 sec)</div>`},
+  {name:"CREATE VIEW", cat:"Database & Tabel", level:"Lanjut", hot:false, desc:"Membuat tabel virtual yang merupakan hasil execute dari sebuah Query.", syntax:"CREATE VIEW nama AS SELECT ...", example:"CREATE VIEW V_Coffee_Products AS SELECT * FROM products WHERE product_category = 'Coffee';", result:`<div class="sys-msg"><i class="ti ti-check"></i> Query OK, 0 rows affected (0.03 sec)</div>`},
+  {name:"CREATE PROCEDURE", cat:"Database & Tabel", level:"Lanjut", hot:false, desc:"Menyimpan blok kode SQL (Stored Procedure) di database agar bisa dieksekusi berkali-kali.", syntax:"CREATE PROCEDURE nama AS sql_statement GO;", example:"CREATE PROCEDURE GetSalesByStore AS SELECT * FROM sales GO;", result:`<div class="sys-msg"><i class="ti ti-check"></i> Query OK, 0 rows affected (0.01 sec)</div>`}
+];
+
+const cats = ["Semua", ...Object.keys(CAT_COLORS)];
+const levels = ["Semua","Dasar","Menengah","Lanjut"];
+let activeCat = "Semua", activeLvl = "Semua", searchQ = "", openCard = null;
+
+function filtered() {
+  return commands.filter(f => {
+    const mc = activeCat === "Semua" || f.cat === activeCat;
+    const ml = activeLvl === "Semua" || f.level === activeLvl;
+    
+    // Logika Pemisahan Koma (Multi-Search)
+    const searchTerms = searchQ.toLowerCase().split(',').map(t => t.trim()).filter(t => t !== "");
+    const mq = searchTerms.length === 0 || searchTerms.some(term => 
+      f.name.toLowerCase().includes(term) || 
+      f.desc.toLowerCase().includes(term) || 
+      f.cat.toLowerCase().includes(term)
+    );
+
+    return mc && ml && mq;
+  });
+}
+
+function renderFilters() {
+  const cf = document.getElementById("catFilters");
+  cf.innerHTML = cats.map(c =>
+    `<button class="fbtn${activeCat===c?' active':''}" data-cat="${c}">
+      <span class="dot" style="background:${CAT_COLORS[c]||'transparent'};${c==='Semua'?'display:none':''}"></span>${c}
+    </button>`
+  ).join("");
+  cf.querySelectorAll(".fbtn").forEach(b => b.addEventListener("click", () => { activeCat = b.dataset.cat; render(); }));
+
+  const lf = document.getElementById("lvlFilters");
+  lf.innerHTML = levels.map(l =>
+    `<button class="fbtn${activeLvl===l?' active':''}" data-lv="${l}">${l}</button>`
+  ).join("");
+  lf.querySelectorAll(".fbtn").forEach(b => b.addEventListener("click", () => { activeLvl = b.dataset.lv; render(); }));
+}
+
+function renderStats(list) {
+  const byLvl = {Dasar:0, Menengah:0, Lanjut:0};
+  list.forEach(f => byLvl[f.level]++);
+  document.getElementById("statsRow").innerHTML =
+    `<div class="stat-card"><div class="stat-num">${list.length}</div><div class="stat-lbl">Total</div></div>` +
+    `<div class="stat-card"><div class="stat-num" style="color:var(--green-text)">${byLvl.Dasar}</div><div class="stat-lbl">Dasar</div></div>` +
+    `<div class="stat-card"><div class="stat-num" style="color:var(--amber-text)">${byLvl.Menengah}</div><div class="stat-lbl">Menengah</div></div>` +
+    `<div class="stat-card"><div class="stat-num" style="color:var(--coral-text)">${byLvl.Lanjut}</div><div class="stat-lbl">Lanjut</div></div>`;
+}
+
+function lvlClass(l) { return l==="Dasar"?"badge-d":l==="Menengah"?"badge-m":"badge-l"; }
+
+function renderCards(list) {
+  const content = document.getElementById("content");
+  if (!list.length) {
+    content.innerHTML = `<div class="empty"><i class="ti ti-mood-empty"></i>Tidak ada perintah SQL yang cocok.</div>`;
+    return;
+  }
+  let grouped = {};
+  if (activeCat === "Semua") { list.forEach(f => { if (!grouped[f.cat]) grouped[f.cat]=[]; grouped[f.cat].push(f); }); }
+  else { grouped[activeCat] = list; }
+
+  let html = "";
+  for (const [cat, items] of Object.entries(grouped)) {
+    if (activeCat === "Semua") html += `<div class="section-head"><span class="dot" style="background:${CAT_COLORS[cat]}"></span>${cat}</div>`;
+    html += `<div class="grid">`;
+    items.forEach(f => {
+      const isOpen = openCard === f.name;
+      html += `<div class="card${isOpen?' open':''}" data-name="${f.name}">
+        <div class="card-head">
+          <div>
+            <div class="card-name">${f.name}</div>
+            <div class="card-meta"><span class="dot" style="background:${CAT_COLORS[f.cat]}"></span>${f.cat}</div>
+          </div>
+          <div class="badges">
+            ${f.hot?'<span class="badge badge-hot"><i class="ti ti-star" style="font-size:10px"></i> Sering</span>':''}
+            <span class="badge ${lvlClass(f.level)}">${f.level}</span>
+            <i class="ti ti-chevron-down chev"></i>
+          </div>
+        </div>
+        <p class="card-desc">${f.desc}</p>
+        <div class="detail">
+          <p class="detail-label">Sintaks Umum</p>
+          <div class="syntax-box">${f.syntax}</div>
+          <p class="detail-label">Contoh Kueri</p>
+          <div class="example-row">
+            <div class="ex-code">${f.example}</div>
+          </div>
+          <p class="detail-label" style="margin-top: 12px;">Hasil Output (Berdasarkan Datamu)</p>
+          <div class="ex-res-box">
+            ${f.result}
+          </div>
+          ${f.tip ? `<div class="tip-box"><i class="ti ti-bulb"></i><span>${f.tip}</span></div>` : ''}
+        </div>
+      </div>`;
+    });
+    html += `</div>`;
+    if (activeCat === "Semua") html += `<div style="height:4px"></div>`;
+  }
+  content.innerHTML = html;
+  content.querySelectorAll(".card").forEach(c => c.addEventListener("click", () => {
+    if (openCard === c.dataset.name) {
+      openCard = null;
+    } else {
+      openCard = c.dataset.name;
+      setTimeout(() => c.scrollIntoView({ behavior: 'smooth', block: 'center' }), 50);
+    }
+    render();
+  }));
+}
+
+function render() {
+  renderFilters();
+  const list = filtered();
+  renderStats(list);
+  renderCards(list);
+}
+
+document.getElementById("searchInput").addEventListener("input", e => { searchQ = e.target.value; render(); });
+render();
+
+</script>
+</body>
+</html>
